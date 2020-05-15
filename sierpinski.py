@@ -7,7 +7,7 @@ import itertools as it
 
 from matplotlib.animation import FuncAnimation
 
-
+eoin = 10
 equalateral_mode = False
 
 
