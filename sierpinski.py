@@ -6,25 +6,27 @@ import random
 import itertools as it
 
 from matplotlib.animation import FuncAnimation
+from mpl_toolkits.mplot3d import Axes3D
 
-eoin = 10
 equalateral_mode = False
 
 
 maxX = 1000
 maxY = 1000
+maxZ = 1000
 
 num_anchors = 3 # i.e. a triangle
 
 # anchor points for triangle
-A = [int(random.uniform(1, maxX+1)), int(random.uniform(1, maxY+1))]
-B = [int(random.uniform(1, maxX+1)), int(random.uniform(1, maxY+1))]
-C = [int(random.uniform(1, maxX+1)), int(random.uniform(1, maxY+1))]
+A = [int(random.uniform(1, maxX+1)), int(random.uniform(1, maxY+1)), int(random.uniform(1, maxZ+1))]
+B = [int(random.uniform(1, maxX+1)), int(random.uniform(1, maxY+1)), int(random.uniform(1, maxZ+1))]
+C = [int(random.uniform(1, maxX+1)), int(random.uniform(1, maxY+1)), int(random.uniform(1, maxZ+1))]
 
 anchor_dict = {1:A, 2:B, 3:C}
 
 x_vals = [A[0], B[0], C[0]]
 y_vals = [A[1], B[1], C[1]]
+z_vals = [A[2], B[2], C[2]]
 
 # # Impose the condition that the initial point is bounded inside the triangle
 # init_x = random.uniform(min(x_vals), max(x_vals))
@@ -49,19 +51,21 @@ def update(self):
 
 	rand_anchor = anchor_dict[int(random.uniform(1, num_anchors+1))]
 
-	midpoint = [(point[0] + rand_anchor[0])/2, (point[1] + rand_anchor[1])/2]
+	midpoint = [(point[0] + rand_anchor[0])/2, (point[1] + rand_anchor[1])/2, (point[2] + rand_anchor[2])/2]
 
 	x_vals.append(midpoint[0])
 	y_vals.append(midpoint[1])
+	z_vals.append(midpoint[2])
 
-	plt.cla()
-	plt.scatter(x_vals, y_vals, s=1)	
+	ax.cla()
+	ax.scatter(x_vals, y_vals, z_vals, s=1.0)	
 
 	np.savetxt("prev_point.txt", midpoint)
 
 	
 
-
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
 ani = FuncAnimation(plt.gcf(), update, interval=10)
 
 plt.show()
