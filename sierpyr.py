@@ -13,21 +13,23 @@ maxX = 1000
 maxY = 1000
 maxZ = 1000
 
-num_anchors = 5 # pyramid corners
+num_anchors = 5 # number of pyramid corners
 height = 700
+first_anch_xy = 10
+base_dimension = int(random.uniform(1, maxX+1 - 10))
 
-# anchor points for triangle
-A = [int(random.uniform(1, maxX+1)), int(random.uniform(1, maxY+1)), int(random.uniform(1, maxZ+1))]
-B = 
-C = 
-D = 
-E = [np.mean(A[0], B[0], C[0], D[0])]
+# anchor points for pyramid
+A = [first_anch_xy, first_anch_xy, 0] # [int(random.uniform(1, maxX+1)), int(random.uniform(1, maxY+1)), int(random.uniform(1, maxZ+1))]
+B = [first_anch_xy + base_dimension, first_anch_xy + base_dimension, 0]
+C = [first_anch_xy, first_anch_xy + base_dimension, 0]
+D = [first_anch_xy + base_dimension, first_anch_xy, 0]
+E = [int(np.mean(A[0], B[0])), int(np.mean(A[1], B[1])), height]
 
-anchor_dict = {1:A, 2:B, 3:C}
+anchor_dict = {1:A, 2:B, 3:C, 4:D, 5:E}
 
-x_vals = [A[0], B[0], C[0]]
-y_vals = [A[1], B[1], C[1]]
-z_vals = [A[2], B[2], C[2]]
+x_vals = [A[0], B[0], C[0], D[0], E[0]]
+y_vals = [A[1], B[1], C[1], D[1], E[1]]
+z_vals = [A[2], B[2], C[2], D[2], E[2]]
 
 # # Impose the condition that the initial point is bounded inside the triangle
 # init_x = random.uniform(min(x_vals), max(x_vals))
@@ -42,8 +44,8 @@ updt = it.count()
 def update(self):
 
 	# updating function that chooses one of the anchor points
-	# at random and creates the next data point that is half-
-	# way between the current data point and that anchor. 
+	# at random and creates the next data point which is half-
+	# way between the current data point and the chosen anchor. 
 
 	if next(updt) == 0:
 		point = START
@@ -52,7 +54,7 @@ def update(self):
 
 	rand_anchor = anchor_dict[int(random.uniform(1, num_anchors+1))]
 
-	midpoint = [(point[0] + rand_anchor[0])/2, (point[1] + rand_anchor[1])/2, (point[2] + rand_anchor[2])/2]
+	midpoint = [int(np.mean(point[0] + rand_anchor[0])), int(np.mean(point[1] + rand_anchor[1])), int(np.mean(point[2] + rand_anchor[2]))]
 
 	x_vals.append(midpoint[0])
 	y_vals.append(midpoint[1])
