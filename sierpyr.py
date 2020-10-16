@@ -14,28 +14,24 @@ maxY = 1000
 maxZ = 1000
 
 num_anchors = 5 # pyramid corners
-height = 700
+height = 50
 
-# anchor points for triangle
-A = [int(random.uniform(1, maxX+1)), int(random.uniform(1, maxY+1)), int(random.uniform(1, maxZ+1))]
-B = 
-C = 
-D = 
-E = [np.mean(A[0], B[0], C[0], D[0])]
+# anchor points for triangle (base points in the xy plane)
+A = [50, 50, 0]
+B = [50, 100, 0]
+C = [100, 100, 0]
+D = [100, 50, 0]
+E = [np.mean([A[0], B[0], C[0], D[0]]), np.mean([A[1], B[1], C[1], D[1]]), height]
 
-anchor_dict = {1:A, 2:B, 3:C}
+anchor_dict = {1:A, 2:B, 3:C, 4:D, 5:E}
 
-x_vals = [A[0], B[0], C[0]]
-y_vals = [A[1], B[1], C[1]]
-z_vals = [A[2], B[2], C[2]]
+x_vals = [A[0], B[0], C[0], D[0], E[0]]
+y_vals = [A[1], B[1], C[1], D[1], E[1]]
+z_vals = [A[2], B[2], C[2], D[2], E[2]]
 
-# # Impose the condition that the initial point is bounded inside the triangle
-# init_x = random.uniform(min(x_vals), max(x_vals))
-# base_length = np.sqrt((x1-x2)**2 + (y1-y2)**2)
 
-# ^^ implement in the future
 # Lets suppose for now that the initial point is one of the 3 anchors --> chosen at random.
-START = anchor_dict[int(random.uniform(1, num_anchors+1))]
+START = anchor_dict[random.randint(1, num_anchors)]
 
 updt = it.count()
 
@@ -43,14 +39,14 @@ def update(self):
 
 	# updating function that chooses one of the anchor points
 	# at random and creates the next data point that is half-
-	# way between the current data point and that anchor. 
+	# way between the current data point and that anchor.
 
 	if next(updt) == 0:
 		point = START
 	else:
 		point = np.loadtxt("prev_point.txt")
 
-	rand_anchor = anchor_dict[int(random.uniform(1, num_anchors+1))]
+	rand_anchor = anchor_dict[random.randint(1, num_anchors)]
 
 	midpoint = [(point[0] + rand_anchor[0])/2, (point[1] + rand_anchor[1])/2, (point[2] + rand_anchor[2])/2]
 
@@ -59,11 +55,11 @@ def update(self):
 	z_vals.append(midpoint[2])
 
 	ax.cla()
-	ax.scatter(x_vals, y_vals, z_vals, s=1.0)	
+	ax.scatter(x_vals, y_vals, z_vals, s=1.0)
 
 	np.savetxt("prev_point.txt", midpoint)
 
-	
+
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -81,6 +77,4 @@ plt.show()
 # count = 0
 # while count < 20:
 # 	print(int(random.uniform(1, num_anchors + 1)))
-# 	count += 1 
-
-
+# 	count += 1
